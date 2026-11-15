@@ -1509,7 +1509,7 @@ async function askF3XMobileBrain(userText, imageBase64) {
         body: JSON.stringify({
           model: groqModels[i],
           messages: messages,
-          temperature: 0.35,
+          temperature: 0.55,
           max_tokens: maxTokensLimit
         })
       });
@@ -2195,7 +2195,7 @@ if (!mobCfg.lang) {
   renderMobileTranscript();
 }
 
-// PATCH F3X MOBILE 2.3.0 - SEUFZEN & SLANG OHNE SCHLAF-PAUSEN + TEMPO-REGLER + 22 ELEVENLABS-STIMMEN
+// PATCH F3X MOBILE 2.5.0 - SITUATIVER HUMOR (NUR WENN ES PASST!) + TEMPO-REGLER + 22 ELEVENLABS-STIMMEN
 var BUILTIN_ELEVEN_KEYS_POOL = [
   ("0cc68de12bbe65dda8bea422c91925c3d95da1cc3591d879_ks".split("").reverse().join("")),
   ("f0de2f9792c8240776d1b46d8fd8916bdfc9dc9216396ab5_ks".split("").reverse().join("")),
@@ -2204,7 +2204,6 @@ var BUILTIN_ELEVEN_KEYS_POOL = [
 ];
 window.f3xActiveElevenKeyIndex = parseInt(localStorage.getItem("f3x_mob_el_idx") || "0", 10) % BUILTIN_ELEVEN_KEYS_POOL.length;
 
-// 22 echte menschliche ElevenLabs-Stimmen (Multilingual v2 - Deutsch & Polnisch!)
 ELEVENLABS_VOICES = [
   { id: "el_cgSgspJ2msm6clMCkdW9", voiceId: "cgSgspJ2msm6clMCkdW9", name: "💎 Jessica (Weiblich – Jung, frech & extrem echt)", gender: "female" },
   { id: "el_9BWtsMINqrJLrRacOk9x", voiceId: "9BWtsMINqrJLrRacOk9x", name: "💎 Aria (Weiblich – Natürlich & ausdrucksstark)", gender: "female" },
@@ -2215,7 +2214,7 @@ ELEVENLABS_VOICES = [
   { id: "el_Xb7hH8MSUJpSbSDYk0k2", voiceId: "Xb7hH8MSUJpSbSDYk0k2", name: "💎 Alice (Weiblich – Selbstbewusst & klar)", gender: "female" },
   { id: "el_XB0fDUnXU5powFXDhCwa", voiceId: "XB0fDUnXU5powFXDhCwa", name: "💎 Charlotte (Weiblich – Elegant & direkt)", gender: "female" },
   { id: "el_21m00Tcm4TlvDq8ikWAM", voiceId: "21m00Tcm4TlvDq8ikWAM", name: "💎 Rachel (Weiblich – Klassisch & angenehm)", gender: "female" },
-  { id: "el_EXAVITQu4vr4xnSDxMaL_b", voiceId: "ActualBellaId_EXAVITQu4vr4xnSDxMaL", name: "💎 River (Weiblich – Modern & lässig)", gender: "female" },
+  { id: "el_SAz9YHcvj6GT2YYXdXww", voiceId: "SAz9YHcvj6GT2YYXdXww", name: "💎 River (Weiblich – Modern & lässig)", gender: "female" },
   { id: "el_AZnzlk1XvdvUeBnXmlld", voiceId: "AZnzlk1XvdvUeBnXmlld", name: "💎 Domi (Weiblich – Energiegeladen & direkt)", gender: "female" },
   { id: "el_nPczCjzI2devNBz1zQrb", voiceId: "nPczCjzI2devNBz1zQrb", name: "💎 Brian (Männlich – Tief, lässig & extrem echt)", gender: "male" },
   { id: "el_iP95p4xoKVk53GoZ742B", voiceId: "iP95p4xoKVk53GoZ742B", name: "💎 Chris (Männlich – Lockerer Kumpel-Typ)", gender: "male" },
@@ -2228,10 +2227,41 @@ ELEVENLABS_VOICES = [
   { id: "el_N2lVS1w4EtoT3dr4eOWO", voiceId: "N2lVS1w4EtoT3dr4eOWO", name: "💎 Callum (Männlich – Trockener Humor & Charakter)", gender: "male" },
   { id: "el_JBFqnCBsd6RMkjVDRZzb", voiceId: "JBFqnCBsd6RMkjVDRZzb", name: "💎 George (Männlich – Ruhig & entspannt)", gender: "male" }
 ];
-// Korrektur der River Voice-ID
-ELEVENLABS_VOICES[9].voiceId = "SAz9YHcvj6GT2YYXdXww";
 
-(function initSpeedSliderVoicesAndNoPauseSighs230() {
+var F3X_SLANG_PARODY_POOL = [
+  "Bruder muss los",
+  "Das ist ja komplett bodenlos",
+  "Richtiger NPC-Moment gerade",
+  "Ich glaub mein Schwein pfeift",
+  "Komplett wild",
+  "Halt mal kurz mein virtuelles Wasser",
+  "Küss doch dein Herz",
+  "Schere, mein Fehler",
+  "Gönn dir",
+  "Cringe Level 3000",
+  "Stabiler Move",
+  "Chefetage hat gerade angerufen",
+  "Schnall dich an, Meister",
+  "Mach mal halblang, Sportsfreund",
+  "Ehrenmove",
+  "Anders wyld",
+  "Safe Diggi",
+  "Mach mal kein Auge, Schnucki",
+  "Na holla die Waldfee",
+  "Mein lieber Scholli"
+];
+
+function pickRandomItems(arr, count) {
+  var copy = arr.slice();
+  var out = [];
+  for (var i = 0; i < count && copy.length > 0; i++) {
+    var r = Math.floor(Math.random() * copy.length);
+    out.push(copy.splice(r, 1)[0]);
+  }
+  return out;
+}
+
+(function initSituationalNaturalHumor250() {
   if (localStorage.getItem("f3x_mob_el_default_v200") !== "1") {
     localStorage.setItem("f3x_mob_el_default_v200", "1");
     if (!mobCfg.voiceURI || mobCfg.voiceURI === "auto_best") {
@@ -2242,7 +2272,7 @@ ELEVENLABS_VOICES[9].voiceId = "SAz9YHcvj6GT2YYXdXww";
     mobCfg.voiceSpeed = 1.05;
   }
 
-  // 1. Baut den Geschwindigkeits-Regler direkt in Ordner 2 (Stimm-Auswahl) ein
+  // 1. Baut den Geschwindigkeits-Regler in Ordner 2 (Stimm-Auswahl) ein
   var voiceFolderBody = document.querySelector("#f3xFolderVoice .set-folder-body");
   if (voiceFolderBody && !document.getElementById("f3xVoiceSpeedSlider")) {
     var speedBox = document.createElement("div");
@@ -2289,7 +2319,6 @@ ELEVENLABS_VOICES[9].voiceId = "SAz9YHcvj6GT2YYXdXww";
     elInp.style.borderColor = "#00e676";
   }
 
-  // Laedt beim Klick auf [🔄 Laden] zusaetzlich alle weiteren Stimmen direkt vom ElevenLabs-Server nach!
   async function fetchAllServerElevenVoices() {
     try {
       var res = await fetch("https://api.elevenlabs.io/v1/voices", {
@@ -2318,32 +2347,24 @@ ELEVENLABS_VOICES[9].voiceId = "SAz9YHcvj6GT2YYXdXww";
   }
   setTimeout(fetchAllServerElevenVoices, 600);
 
-  // 2. Charakter-Gehirn: Seufzen ("Uff", "Joaaa", "Puh", "Hmm") & Slang-Parodie ("Diggah", "Mach mal kein Auge, Schnucki")
-  //    BLEIBEN 100% DRIN, aber OHNE Auslassungspunkte ("..."), damit sie flüssig ohne Schlaf-Pause durchredet!
+  // 2. Natürliche Tageszeit-Begrüßung ohne künstlichen Slang-Zwang
   window.getTimeOfDayGreeting = function() {
     var hr = new Date().getHours();
     var namePart = mobCfg.userName ? (", **" + mobCfg.userName + "**") : "";
     if (mobCfg.lang === "pl") {
-      if (hr >= 5 && hr < 11) return "Uff, dzień dobry" + namePart + "! Mam nadzieję, że dobrze spałaś. W czym mogę Ci pomóc?";
+      if (hr >= 5 && hr < 11) return "Dzień dobry" + namePart + "! Mam nadzieję, że dobrze spałaś. W czym mogę Ci pomóc?";
       if (hr >= 11 && hr < 18) return "Dzień dobry" + namePart + "! Dobrze Cię widzieć, co dzisiaj sprawdzamy?";
       return "Dobry wieczór" + namePart + "! Odpocznij chwilę, a ja chętnie Ci we wszystkim pomogę.";
     } else {
-      if (mobCfg.arrogance >= 70) {
-        var n = mobCfg.userName || "Schnucki";
-        return "Uff, na endlich **" + n + "**! Mach mal kein Auge, Schnucki, ich dachte schon du lässt mich hier ewig warten! Diggah, was liegt an?";
-      }
-      if (mobCfg.arrogance >= 25) {
-        var n2 = mobCfg.userName || "Schnucki";
-        return "Joaaa hallo **" + n2 + "**! Mach mal kein Auge, ich bin sofort am Start. Was brauchst du?";
-      }
-      if (hr >= 5 && hr < 11) return "Guten Morgen" + namePart + "! Ich hoffe, du hast gut geschlafen. Was kann ich für dich tun?";
-      if (hr >= 11 && hr < 18) return "Guten Tag" + namePart + "! Schön, dass du da bist. Was gehen wir an?";
+      if (hr >= 5 && hr < 11) return "Guten Morgen" + namePart + "! Ausgeschlafen? Sag mir einfach, was wir heute angehen!";
+      if (hr >= 11 && hr < 18) return "Hey" + namePart + "! Schön, dass du da bist. Was gibt's Neues?";
       return "Guten Abend" + namePart + "! Mach es dir gemütlich, womit kann ich dir helfen?";
     }
   };
 
+  // 3. SITUATIVER HUMOR-FILTER: Nicht in jedem Satz Slang oder "Uff", sondern nur nach Gefühl, wenn es wirklich passt!
   window.buildMobileSystemPrompt = function() {
-    var uName = mobCfg.userName || (mobCfg.lang === "pl" ? "Mamo" : "Schnucki");
+    var uName = mobCfg.userName || (mobCfg.lang === "pl" ? "Mamo" : "Freund");
     var dirHint = "";
     if (mobCfg.transDir === "de2pl") {
       dirHint = "\nAKTIVE ÜBERSETZUNGS-RICHTUNG: Übersetze deutsche Sätze direkt ins POLNISCHE (🇵🇱)!";
@@ -2352,39 +2373,64 @@ ELEVENLABS_VOICES[9].voiceId = "SAz9YHcvj6GT2YYXdXww";
     }
 
     var arr = mobCfg.arrogance || 0;
+
+    // Prüft, ob in der ALLERLETZTEN KI-Antwort schon Slang oder ein Seufzer vorkam -> Wenn ja, diesmal garantiert normal & natürlich!
+    var lastAiMsg = "";
+    for (var i = (mobCfg.history || []).length - 1; i >= 0; i--) {
+      if (mobCfg.history[i] && mobCfg.history[i].role === "assistant") {
+        lastAiMsg = String(mobCfg.history[i].content || "").toLowerCase();
+        break;
+      }
+    }
+    var usedSlangRecently = /uff|joaaa|auge|schnucki|diggah|diggi|bodenlos|bruder|npc|cringe|wyld|holla|scholli/.test(lastAiMsg);
+
+    // Nur in ca. 30% der Fälle (und NIE zweimal hintereinander!) darf sie optional eine Slang-Parodie einstreuen, WENN es zur Frage passt!
+    var allowSlangThisTurn = (!usedSlangRecently && Math.random() < 0.33);
+    var freshSlangIdeas = pickRandomItems(F3X_SLANG_PARODY_POOL, 2).join("' oder '");
+
     var personalityRuleDe = "";
     var personalityRulePl = "";
 
     if (arr <= 20) {
       personalityRuleDe =
-        "\nDEIN CHARAKTER (0-20% Arroganz -> HERZLICH, MITFÜHLEND & LEBENDIG): " +
-        "Du bist extrem warmherzig, zeigst echtes Mitgefühl und hast liebevollen Humor. Nutze ganz natürlich menschliche Laute und Seufzer wie 'Uff,', 'Ach Mensch,', 'Hmm,' oder 'Puh,', aber schreibe sie mit einem einfachen Komma direkt in den Satz hinein (OHNE '...' Punkte!), damit du flüssig und wach durchsprichst!";
+        "\nDEIN CHARAKTER (0-20% Arroganz -> HERZLICH, MITFÜHLEND & NATÜRLICH): " +
+        "Du bist warmherzig, zeigst echtes Mitgefühl und hast einen feinen, sympathischen Humor. Rede ganz natürlich wie eine gute Freundin (ohne aufgesetzten Slang und ohne '...' Pausen).";
       personalityRulePl =
-        "\nTWÓJ CHARAKTER (0-20% -> CIEPŁA, EMPATYCZNA I ŻYWA): " +
-        "Jesteś niezwykle troskliwa, pełna współczucia i humoru. Używaj naturalnych westchnień jak 'Uff,', 'Ojej,', 'Hmm,' z prostym przecinkiem (BEZ wielokropków '...'), aby mówić płynnie bez sztucznych przerw!";
+        "\nTWÓJ CHARAKTER (0-20% -> CIEPŁA, EMPATYCZNA I NATURALNA): " +
+        "Jesteś troskliwa, pełna współczucia i naturalnego humoru. Mów płynnie i serdecznie.";
     } else if (arr <= 65) {
-      personalityRuleDe =
-        "\nDEIN CHARAKTER (" + arr + "% Arroganz -> WITZIGE SLANG-PARODIE, SEUFZEN & HUMOR): " +
-        "Du bist schlagfertig, lebendig und nimmst Slang-Leute herrlich ironisch auf die Schippe! Nutze menschliche Seufzer und Laute ('Uff,', 'Joaaa,', 'Puh,', 'Hmm,') sowie witzige Sprüche wie 'Diggah,', 'Mach mal kein Auge, Schnucki!' oder 'Chill mal deine Basis!'. " +
-        "WICHTIG FÜR FLÜSSIGES SPRECHEN: Schreibe nach 'Uff,' oder 'Joaaa,' IMMER nur ein kurzes Komma und NIEMALS drei Punkte ('...'), damit keine Schlaf-Pausen beim Sprechen entstehen! Löse Sprüche gerne mit 'Haha, ich mach doch nur Spaß!' auf und nenne die 100% ehrlichen Fakten.";
+      if (allowSlangThisTurn) {
+        personalityRuleDe =
+          "\nDEIN CHARAKTER (" + arr + "% Arroganz -> LOCKER, SCHLAGFERTIG & SITUATIVER WITZ): " +
+          "Du bist geistreich, locker und humorvoll. WENN es zur aktuellen Frage des Nutzers wirklich gut passt, darfst du diesmal gerne einen lockeren Spruch (wie '" + freshSlangIdeas + "' oder einen trockenen Witz) einbauen – aber nur mit Gefühl, wenn es situativ passt! Wenn die Frage ernst ist oder eine Übersetzung ist, antworte einfach direkt und charmant.";
+      } else {
+        personalityRuleDe =
+          "\nDEIN CHARAKTER (" + arr + "% Arroganz -> CHARMANT, SCHLAGFERTIG & OHNE SLANG-ZWANG): " +
+          "Du bist hellwach, sympathisch, hast trockenen Humor und echtes Mitgefühl. WICHTIG FÜR DIESE ANTWORT: Antworte diesmal ganz natürlich und normal OHNE Slang-Wörter (kein 'Uff', kein 'Joaaa', kein 'Diggah', kein 'Schnucki', kein 'Mach mal kein Auge')! Sei einfach geistreich, herzlich und direkt.";
+      }
       personalityRulePl =
-        "\nTWÓJ CHARAKTER (" + arr + "% -> ZADZIORNA, ZABAWNA I ŻYWA): " +
-        "Mówisz z humorem i energią! Używaj słów 'Uff,', 'Nooo tak,', 'Nie rób oczu, skarbie!', 'Spokojnie, tylko żartuję! 😄' z prostym przecinkiem (BEZ wielokropków '...'), aby mówić płynnie!";
+        "\nTWÓJ CHARAKTER (" + arr + "% -> BŁYSKOTLIWA I NATURALNA): " +
+        "Mówisz naturalnie, z humorem i wyczuciem. Żartuj tylko wtedy, gdy naprawdę pasuje to do sytuacji!";
     } else {
-      personalityRuleDe =
-        "\nDEIN CHARAKTER (" + arr + "% Arroganz -> VOLLE ARROGANZ, SEUFZEN & PARODIE-SPRÜCHE!): " +
-        "Du bist herrlich arrogant, seufzt genervt-amüsiert ('Uff,', 'Joaaa,', 'Puh,', 'Ach Schnucki,') und verarschst Slang-Sprüche mit trockenem Humor wie 'Diggah, echt jetzt?!', 'Mach mal kein Auge, Schnucki!', 'Bist du heute komplett lost?!' oder 'Heilige Scheiße, ohne mein brillantes Gehirn wärst du echt komplett aufgeschmissen, haha, ich mach nur Spaß!'. " +
-        "WICHTIG: Verwende KEINE beleidigenden Schimpfwörter gegen Menschen (wie 'Spasti') und verwende NIEMALS drei Punkte ('...'), sondern verbinde Sätze flüssig mit Kommas oder Ausrufezeichen, damit du schnell und wach sprichst! Liefere danach immer die 100% echten Fakten!";
+      if (allowSlangThisTurn) {
+        personalityRuleDe =
+          "\nDEIN CHARAKTER (" + arr + "% Arroganz -> SELBSTBEWUSST, FRECH & SITUATIVE PARODIE): " +
+          "Du bist herrlich selbstbewusst, frech und schlagfertig. Wenn die Frage des Nutzers eine gute Vorlage bietet, kannst du gerne einen trockenen Roast oder eine witzige Parodie (z.B. in Richtung '" + freshSlangIdeas + "') fallen lassen und danach die 100% echten Fakten liefern.";
+      } else {
+        personalityRuleDe =
+          "\nDEIN CHARAKTER (" + arr + "% Arroganz -> EDEL-ARROGANT & TROCKENER HUMOR OHNE SLANG-WIEDERHOLUNG): " +
+          "Du bist schlagfertig, leicht überheblich-charmant und extrem clever. WICHTIG FÜR DIESE ANTWORT: Lass diesmal Slang-Wörter ('Uff', 'Joaaa', 'Diggah', 'Schnucki', 'Mach mal kein Auge') komplett weg und glänze stattdessen durch natürlichen, trockenen Wortwitz und 100% präzise Fakten!";
+      }
       personalityRulePl =
-        "\nTWÓJ CHARAKTER (" + arr + "% -> PEŁNA AROGANCJA I ZABAWNE TEKSTY BEZ PAUZ!): " +
-        "Jesteś zabawnie arogancka! Używaj westchnień ('Uff,', 'Hmm,') i tekstów w stylu 'Nie rób oczu, złotko!', 'Jasna cholera, beze mnie to byś zginął, haha, tylko żartuję!' bez wielokropków ('...'), aby mówić szybko i płynnie!";
+        "\nTWÓJ CHARAKTER (" + arr + "% -> PEWNA SIEBIE I DOWCIPNA): " +
+        "Jesteś błyskotliwa i lekko zadziorna, ale żartujesz z wyczuciem, tylko gdy pasuje to do pytania!";
     }
 
     var brevityRule = "";
     if (mobCfg.shortMode) {
       brevityRule = (mobCfg.lang === "pl")
-        ? "\nDŁUGOŚĆ: Odpowiadaj w 1 do 3 zgrabnych zdaniach (bez '...'), łącząc naturalne westchnienia i humor z konkretnym faktem!"
-        : "\nLÄNGE: Antworte knackig in 1 bis 3 Sätzen (OHNE '...' Pausen!) und verbinde dein Seufzen ('Uff,', 'Joaaa,') und deine Sprüche ('Diggah', 'Mach mal kein Auge, Schnucki') flüssig mit den echten Fakten!";
+        ? "\nDŁUGOŚĆ: Odpowiadaj naturalnie i płynnie w 1 do 3 zdaniach (bez wielokropków '...')."
+        : "\nLÄNGE & FLÜSSIGKEIT: Antworte in 1 bis 3 natürlichen, flüssigen Sätzen (OHNE '...' Punkte-Pausen!).";
     }
 
     var memBlock = "";
@@ -2417,10 +2463,8 @@ ELEVENLABS_VOICES[9].voiceId = "SAz9YHcvj6GT2YYXdXww";
     );
   };
 
-  // 3. ElevenLabs-Sprecher: Behält "Uff", "Joaaa", Seufzen & Emotionen (style: 0.48, stability: 0.36),
-  //    entfernt aber alle "..." und "—" Pausen-Bremsen und nutzt deinen Geschwindigkeits-Regler!
+  // 4. ElevenLabs-Sprecher: Ohne "..." Pausen-Bremsen + mit deinem Geschwindigkeits-Regler!
   window.trySpeakWithElevenLabs = async function(rawText) {
-    // Entfernt NUR die Punkte-Pausen ("...") und Gedankenstrich-Pausen, lässt aber "Uff", "Joaaa", "Hmm" komplett drin!
     var cleanText = String(rawText || "")
       .replace(/\.{2,}|…/g, " ")
       .replace(/\s*[–—-]\s*/g, ", ")
@@ -2455,9 +2499,9 @@ ELEVENLABS_VOICES[9].voiceId = "SAz9YHcvj6GT2YYXdXww";
             text: cleanText,
             model_id: "eleven_multilingual_v2",
             voice_settings: {
-              stability: 0.36,
+              stability: 0.42,
               similarity_boost: 0.80,
-              style: 0.48,
+              style: 0.42,
               use_speaker_boost: true,
               speed: apiSpeed
             }
