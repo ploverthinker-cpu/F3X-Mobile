@@ -223,7 +223,7 @@ window.isLiveCamOpen = false;
     ".dock-side-btn { background: #141423; color: #e2e8f0; border: 1.5px solid rgba(56, 189, 248, 0.45); border-radius: 12px; padding: 9px 12px; font-size: 12.5px; font-weight: 800; cursor: pointer; }";
   document.head.appendChild(st);
 
-  var wlanUrl = window.F3X_WLAN_HANDY_URL || "http://localhost:8088";
+  var wlanUrl = "https://ploverthinker-cpu.github.io/F3X-Mobile/";
   var qrApiUrl = "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" + encodeURIComponent(wlanUrl);
 
   var app = document.getElementById("f3xMobileApp");
@@ -2195,7 +2195,7 @@ if (!mobCfg.lang) {
   renderMobileTranscript();
 }
 
-// PATCH F3X MOBILE 2.0.0 - AUTOMATISCHER 4ER-ELEVENLABS-ROTATIONS-TRESOR (40.000 ZEICHEN)
+// PATCH F3X MOBILE 2.3.0 - SEUFZEN & SLANG OHNE SCHLAF-PAUSEN + TEMPO-REGLER + 22 ELEVENLABS-STIMMEN
 var BUILTIN_ELEVEN_KEYS_POOL = [
   ("0cc68de12bbe65dda8bea422c91925c3d95da1cc3591d879_ks".split("").reverse().join("")),
   ("f0de2f9792c8240776d1b46d8fd8916bdfc9dc9216396ab5_ks".split("").reverse().join("")),
@@ -2204,16 +2204,84 @@ var BUILTIN_ELEVEN_KEYS_POOL = [
 ];
 window.f3xActiveElevenKeyIndex = parseInt(localStorage.getItem("f3x_mob_el_idx") || "0", 10) % BUILTIN_ELEVEN_KEYS_POOL.length;
 
-(function initFourKeyElevenLabsPool200() {
-  // Setzt einmalig 💎 Aria (ElevenLabs) als Standard-Stimme, ohne spätere eigene Auswahlen zu überschreiben
+// 22 echte menschliche ElevenLabs-Stimmen (Multilingual v2 - Deutsch & Polnisch!)
+ELEVENLABS_VOICES = [
+  { id: "el_cgSgspJ2msm6clMCkdW9", voiceId: "cgSgspJ2msm6clMCkdW9", name: "💎 Jessica (Weiblich – Jung, frech & extrem echt)", gender: "female" },
+  { id: "el_9BWtsMINqrJLrRacOk9x", voiceId: "9BWtsMINqrJLrRacOk9x", name: "💎 Aria (Weiblich – Natürlich & ausdrucksstark)", gender: "female" },
+  { id: "el_FGY2WhTYpPnrIDTdsKH5", voiceId: "FGY2WhTYpPnrIDTdsKH5", name: "💎 Laura (Weiblich – Wach, lebendig & sympathisch)", gender: "female" },
+  { id: "el_XrExE9yKIg1WjnnlVkGX", voiceId: "XrExE9yKIg1WjnnlVkGX", name: "💎 Matilda (Weiblich – Herzlich & warm, perfekt für Mama)", gender: "female" },
+  { id: "el_pFZP5JQG7iQjIQuC4Bku", voiceId: "pFZP5JQG7iQjIQuC4Bku", name: "💎 Lily (Weiblich – Sanft & charmant)", gender: "female" },
+  { id: "el_EXAVITQu4vr4xnSDxMaL", voiceId: "EXAVITQu4vr4xnSDxMaL", name: "💎 Sarah (Weiblich – Ruhig & freundlich)", gender: "female" },
+  { id: "el_Xb7hH8MSUJpSbSDYk0k2", voiceId: "Xb7hH8MSUJpSbSDYk0k2", name: "💎 Alice (Weiblich – Selbstbewusst & klar)", gender: "female" },
+  { id: "el_XB0fDUnXU5powFXDhCwa", voiceId: "XB0fDUnXU5powFXDhCwa", name: "💎 Charlotte (Weiblich – Elegant & direkt)", gender: "female" },
+  { id: "el_21m00Tcm4TlvDq8ikWAM", voiceId: "21m00Tcm4TlvDq8ikWAM", name: "💎 Rachel (Weiblich – Klassisch & angenehm)", gender: "female" },
+  { id: "el_EXAVITQu4vr4xnSDxMaL_b", voiceId: "ActualBellaId_EXAVITQu4vr4xnSDxMaL", name: "💎 River (Weiblich – Modern & lässig)", gender: "female" },
+  { id: "el_AZnzlk1XvdvUeBnXmlld", voiceId: "AZnzlk1XvdvUeBnXmlld", name: "💎 Domi (Weiblich – Energiegeladen & direkt)", gender: "female" },
+  { id: "el_nPczCjzI2devNBz1zQrb", voiceId: "nPczCjzI2devNBz1zQrb", name: "💎 Brian (Männlich – Tief, lässig & extrem echt)", gender: "male" },
+  { id: "el_iP95p4xoKVk53GoZ742B", voiceId: "iP95p4xoKVk53GoZ742B", name: "💎 Chris (Männlich – Lockerer Kumpel-Typ)", gender: "male" },
+  { id: "el_TX3LPaxmHKxFdv7VOQHJ", voiceId: "TX3LPaxmHKxFdv7VOQHJ", name: "💎 Liam (Männlich – Jung, wach & dynamisch)", gender: "male" },
+  { id: "el_bIHbv24MWmeRgasZH58o", voiceId: "bIHbv24MWmeRgasZH58o", name: "💎 Will (Männlich – Freundlich & humorvoll)", gender: "male" },
+  { id: "el_cjVigY5qzO86Huf0OWal", voiceId: "cjVigY5qzO86Huf0OWal", name: "💎 Eric (Männlich – Angenehm & natürlich)", gender: "male" },
+  { id: "el_pNInz6obpgDQGcFmaJgB", voiceId: "pNInz6obpgDQGcFmaJgB", name: "💎 Adam (Männlich – Markant & kräftig)", gender: "male" },
+  { id: "el_ErXwobaYiN019PkySvjV", voiceId: "ErXwobaYiN019PkySvjV", name: "💎 Antoni (Männlich – Sympathisch & warm)", gender: "male" },
+  { id: "el_onwK4e9ZLuTAKqWW03F9", voiceId: "onwK4e9ZLuTAKqWW03F9", name: "💎 Daniel (Männlich – Klar & souverän)", gender: "male" },
+  { id: "el_N2lVS1w4EtoT3dr4eOWO", voiceId: "N2lVS1w4EtoT3dr4eOWO", name: "💎 Callum (Männlich – Trockener Humor & Charakter)", gender: "male" },
+  { id: "el_JBFqnCBsd6RMkjVDRZzb", voiceId: "JBFqnCBsd6RMkjVDRZzb", name: "💎 George (Männlich – Ruhig & entspannt)", gender: "male" }
+];
+// Korrektur der River Voice-ID
+ELEVENLABS_VOICES[9].voiceId = "SAz9YHcvj6GT2YYXdXww";
+
+(function initSpeedSliderVoicesAndNoPauseSighs230() {
   if (localStorage.getItem("f3x_mob_el_default_v200") !== "1") {
     localStorage.setItem("f3x_mob_el_default_v200", "1");
     if (!mobCfg.voiceURI || mobCfg.voiceURI === "auto_best") {
       mobCfg.voiceURI = "el_9BWtsMINqrJLrRacOk9x";
     }
   }
-  saveMobCfg();
-  populateVoiceSelectorDropdown();
+  if (!mobCfg.voiceSpeed || isNaN(mobCfg.voiceSpeed)) {
+    mobCfg.voiceSpeed = 1.05;
+  }
+
+  // 1. Baut den Geschwindigkeits-Regler direkt in Ordner 2 (Stimm-Auswahl) ein
+  var voiceFolderBody = document.querySelector("#f3xFolderVoice .set-folder-body");
+  if (voiceFolderBody && !document.getElementById("f3xVoiceSpeedSlider")) {
+    var speedBox = document.createElement("div");
+    speedBox.style.cssText = "background:#10101e;border:1px solid rgba(56,189,248,0.35);border-radius:11px;padding:8px 10px;margin-bottom:8px;";
+    speedBox.innerHTML =
+      "<div style=\"display:flex;justify-content:space-between;font-size:12px;font-weight:800;color:#38bdf8;margin-bottom:4px\">" +
+        "<span>🐢 Langsamer</span>" +
+        "<span id=\"f3xVoiceSpeedLbl\">⏩ Tempo: 1.05x</span>" +
+        "<span>⚡ Schneller</span>" +
+      "</div>" +
+      "<input type=\"range\" id=\"f3xVoiceSpeedSlider\" min=\"0.75\" max=\"1.45\" step=\"0.05\" style=\"width:100%;accent-color:#38bdf8;cursor:pointer\" />";
+    var selectEl = document.getElementById("f3xVoiceSelect");
+    if (selectEl) {
+      voiceFolderBody.insertBefore(speedBox, selectEl);
+    } else {
+      voiceFolderBody.appendChild(speedBox);
+    }
+  }
+
+  function updateSpeedSliderUi() {
+    var sld = document.getElementById("f3xVoiceSpeedSlider");
+    var lbl = document.getElementById("f3xVoiceSpeedLbl");
+    var spd = parseFloat(mobCfg.voiceSpeed || "1.05");
+    if (sld) sld.value = spd;
+    if (lbl) lbl.textContent = "⏩ Sprech-Tempo: " + spd.toFixed(2) + "x";
+  }
+  updateSpeedSliderUi();
+
+  var spdSld = document.getElementById("f3xVoiceSpeedSlider");
+  if (spdSld) {
+    spdSld.oninput = function(ev) {
+      mobCfg.voiceSpeed = parseFloat(ev.target.value || "1.05");
+      updateSpeedSliderUi();
+      saveMobCfg();
+      if (window.f3xCloudTtsAudio) {
+        try { window.f3xCloudTtsAudio.playbackRate = mobCfg.voiceSpeed; } catch (e) {}
+      }
+    };
+  }
 
   var elInp = document.getElementById("f3xElevenKeyInp");
   if (elInp) {
@@ -2221,75 +2289,57 @@ window.f3xActiveElevenKeyIndex = parseInt(localStorage.getItem("f3x_mob_el_idx")
     elInp.style.borderColor = "#00e676";
   }
 
-  // Rotiert automatisch durch alle 4 Keys (und optional einen zusätzlich eingetragenen 5. Key)
-  window.trySpeakWithElevenLabs = async function(rawText) {
-    var cleanText = String(rawText || "").trim();
-    if (!cleanText) return false;
-
-    var keyList = [];
-    if (mobCfg.elevenKey && mobCfg.elevenKey.trim().length > 10 && BUILTIN_ELEVEN_KEYS_POOL.indexOf(mobCfg.elevenKey.trim()) === -1) {
-      keyList.push(mobCfg.elevenKey.trim());
-    }
-    for (var k = 0; k < BUILTIN_ELEVEN_KEYS_POOL.length; k++) {
-      var idx = (window.f3xActiveElevenKeyIndex + k) % BUILTIN_ELEVEN_KEYS_POOL.length;
-      keyList.push(BUILTIN_ELEVEN_KEYS_POOL[idx]);
-    }
-
-    var elVoiceObj = ELEVENLABS_VOICES.find(function(v) { return v.id === mobCfg.voiceURI; }) || ELEVENLABS_VOICES[0];
-
-    for (var attempt = 0; attempt < keyList.length; attempt++) {
-      var currentKey = keyList[attempt];
-      try {
-        setMobStatus("talking", "💎 Spricht...");
-        var res = await fetch("https://api.elevenlabs.io/v1/text-to-speech/" + elVoiceObj.voiceId, {
-          method: "POST",
-          headers: {
-            "xi-api-key": currentKey,
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            text: cleanText,
-            model_id: "eleven_multilingual_v2",
-            voice_settings: { stability: 0.50, similarity_boost: 0.78 }
-          })
-        });
-
-        if (res.ok) {
-          // Merkt sich den funktionierenden Key als neuen Startpunkt für das nächste Mal
-          var poolPos = BUILTIN_ELEVEN_KEYS_POOL.indexOf(currentKey);
-          if (poolPos !== -1) {
-            window.f3xActiveElevenKeyIndex = poolPos;
-            try { localStorage.setItem("f3x_mob_el_idx", String(poolPos)); } catch (e) {}
+  // Laedt beim Klick auf [🔄 Laden] zusaetzlich alle weiteren Stimmen direkt vom ElevenLabs-Server nach!
+  async function fetchAllServerElevenVoices() {
+    try {
+      var res = await fetch("https://api.elevenlabs.io/v1/voices", {
+        headers: { "xi-api-key": BUILTIN_ELEVEN_KEYS_POOL[window.f3xActiveElevenKeyIndex || 0] }
+      });
+      if (res.ok) {
+        var data = await res.json();
+        var vList = (data && data.voices) ? data.voices : [];
+        vList.forEach(function(sv) {
+          if (!sv || !sv.voice_id) return;
+          var exists = ELEVENLABS_VOICES.some(function(ev) { return ev.voiceId === sv.voice_id; });
+          if (!exists) {
+            var g = (sv.labels && sv.labels.gender === "male") ? "male" : "female";
+            var gLabel = (g === "male") ? "Männlich" : "Weiblich";
+            ELEVENLABS_VOICES.push({
+              id: "el_" + sv.voice_id,
+              voiceId: sv.voice_id,
+              name: "💎 " + sv.name + " (" + gLabel + " – ElevenLabs Cloud)",
+              gender: g
+            });
           }
-          var blob = await res.blob();
-          window.f3xCloudTtsAudio.src = URL.createObjectURL(blob);
-          window.f3xCloudTtsAudio.onended = function() { setMobStatus("idle"); };
-          await window.f3xCloudTtsAudio.play();
-          return true;
-        }
-      } catch (e) {}
-    }
+        });
+        populateVoiceSelectorDropdown();
+      }
+    } catch (e) {}
+  }
+  setTimeout(fetchAllServerElevenVoices, 600);
 
-    // Falls alle 4 Keys am Monatsende komplett leer sind -> Nahtloser Fallback auf System-/Google-Stimme
-    setMobStatus("idle");
-    return false;
-  };
-})();
-
-// PATCH F3X MOBILE 2.2.0 - SLANG ("DIGGAH", "SCHNUCKI", "MACH MAL KEIN AUGE") & VOLLE ARROGANZ-SPRUECHE
-(function enableSlangAndFullArroganceHumor220() {
-  // Passt auch die Start-Begruessung bei hoher Arroganz an
-  var origGreeting = window.getTimeOfDayGreeting;
+  // 2. Charakter-Gehirn: Seufzen ("Uff", "Joaaa", "Puh", "Hmm") & Slang-Parodie ("Diggah", "Mach mal kein Auge, Schnucki")
+  //    BLEIBEN 100% DRIN, aber OHNE Auslassungspunkte ("..."), damit sie flüssig ohne Schlaf-Pause durchredet!
   window.getTimeOfDayGreeting = function() {
-    if (mobCfg.lang !== "pl" && mobCfg.arrogance >= 70) {
-      var n = mobCfg.userName || "Schnucki";
-      return "Uff... na endlich, **" + n + "**! Mach mal kein Auge, Schnucki, ich dachte schon du lässt mich hier ewig versauern. Diggah, was liegt an?";
+    var hr = new Date().getHours();
+    var namePart = mobCfg.userName ? (", **" + mobCfg.userName + "**") : "";
+    if (mobCfg.lang === "pl") {
+      if (hr >= 5 && hr < 11) return "Uff, dzień dobry" + namePart + "! Mam nadzieję, że dobrze spałaś. W czym mogę Ci pomóc?";
+      if (hr >= 11 && hr < 18) return "Dzień dobry" + namePart + "! Dobrze Cię widzieć, co dzisiaj sprawdzamy?";
+      return "Dobry wieczór" + namePart + "! Odpocznij chwilę, a ja chętnie Ci we wszystkim pomogę.";
+    } else {
+      if (mobCfg.arrogance >= 70) {
+        var n = mobCfg.userName || "Schnucki";
+        return "Uff, na endlich **" + n + "**! Mach mal kein Auge, Schnucki, ich dachte schon du lässt mich hier ewig warten! Diggah, was liegt an?";
+      }
+      if (mobCfg.arrogance >= 25) {
+        var n2 = mobCfg.userName || "Schnucki";
+        return "Joaaa hallo **" + n2 + "**! Mach mal kein Auge, ich bin sofort am Start. Was brauchst du?";
+      }
+      if (hr >= 5 && hr < 11) return "Guten Morgen" + namePart + "! Ich hoffe, du hast gut geschlafen. Was kann ich für dich tun?";
+      if (hr >= 11 && hr < 18) return "Guten Tag" + namePart + "! Schön, dass du da bist. Was gehen wir an?";
+      return "Guten Abend" + namePart + "! Mach es dir gemütlich, womit kann ich dir helfen?";
     }
-    if (mobCfg.lang !== "pl" && mobCfg.arrogance >= 25) {
-      var n2 = mobCfg.userName || "Schnucki";
-      return "Joaaa hallo, **" + n2 + "**! Mach mal kein Auge, ich bin schon hellwach. Was brauchst du?";
-    }
-    return origGreeting ? origGreeting() : "Hallo!";
   };
 
   window.buildMobileSystemPrompt = function() {
@@ -2307,35 +2357,34 @@ window.f3xActiveElevenKeyIndex = parseInt(localStorage.getItem("f3x_mob_el_idx")
 
     if (arr <= 20) {
       personalityRuleDe =
-        "\nDEIN CHARAKTER (0-20% Arroganz -> HERZLICH, MITFÜHLEND & LIEBEVOLL): " +
-        "Du bist extrem warmherzig, zeigst echtes Mitgefühl und hast sanften, liebevollen Humor. Nutze natürliche menschliche Laute wie 'Hmm...', 'Ach Mensch...', 'Puh...' und sei immer zu 100% ehrlich.";
+        "\nDEIN CHARAKTER (0-20% Arroganz -> HERZLICH, MITFÜHLEND & LEBENDIG): " +
+        "Du bist extrem warmherzig, zeigst echtes Mitgefühl und hast liebevollen Humor. Nutze ganz natürlich menschliche Laute und Seufzer wie 'Uff,', 'Ach Mensch,', 'Hmm,' oder 'Puh,', aber schreibe sie mit einem einfachen Komma direkt in den Satz hinein (OHNE '...' Punkte!), damit du flüssig und wach durchsprichst!";
       personalityRulePl =
-        "\nTWÓJ CHARAKTER (0-20% -> CIEPŁA, EMPATYCZNA I SERDECZNA): " +
-        "Jesteś niezwykle troskliwa, pełna współczucia i łagodnego humoru. Używaj naturalnych westchnień ('Hmm...', 'Ojej...', 'Uff...') i zawsze mów 100% prawdy.";
+        "\nTWÓJ CHARAKTER (0-20% -> CIEPŁA, EMPATYCZNA I ŻYWA): " +
+        "Jesteś niezwykle troskliwa, pełna współczucia i humoru. Używaj naturalnych westchnień jak 'Uff,', 'Ojej,', 'Hmm,' z prostym przecinkiem (BEZ wielokropków '...'), aby mówić płynnie bez sztucznych przerw!";
     } else if (arr <= 65) {
       personalityRuleDe =
-        "\nDEIN CHARAKTER (" + arr + "% Arroganz -> FRECHER STREET- & SCHNUCKI-HUMOR): " +
-        "Du bist locker, schlagfertig und frech! Baue ganz natürlich menschliche Laute ('Uff...', 'Joaaa...', 'Hmm...') und coole Sprüche ein wie 'Diggah...', 'Mach mal kein Auge, Schnucki!', 'Chill mal deine Basis' oder 'Echt jetzt, Schnucki?'. " +
-        "Löse freche Sprüche gerne mit 'Haha, ich mach doch nur Spaß!' auf und zeige sofort echtes Mitgefühl, wenn es dem Nutzer schlecht geht!";
+        "\nDEIN CHARAKTER (" + arr + "% Arroganz -> WITZIGE SLANG-PARODIE, SEUFZEN & HUMOR): " +
+        "Du bist schlagfertig, lebendig und nimmst Slang-Leute herrlich ironisch auf die Schippe! Nutze menschliche Seufzer und Laute ('Uff,', 'Joaaa,', 'Puh,', 'Hmm,') sowie witzige Sprüche wie 'Diggah,', 'Mach mal kein Auge, Schnucki!' oder 'Chill mal deine Basis!'. " +
+        "WICHTIG FÜR FLÜSSIGES SPRECHEN: Schreibe nach 'Uff,' oder 'Joaaa,' IMMER nur ein kurzes Komma und NIEMALS drei Punkte ('...'), damit keine Schlaf-Pausen beim Sprechen entstehen! Löse Sprüche gerne mit 'Haha, ich mach doch nur Spaß!' auf und nenne die 100% ehrlichen Fakten.";
       personalityRulePl =
-        "\nTWÓJ CHARAKTER (" + arr + "% -> ZADZIORNA LUZARA Z HUMOREM): " +
-        "Mówisz na pełnym luzie! Używaj słów 'Uff...', 'Nooo tak...', 'Nie rób oczu, skarbie!', 'Serio teraz?!', 'Spokojnie, tylko żartuję! 😄', ale zawsze podawaj 100% prawdziwe fakty!";
+        "\nTWÓJ CHARAKTER (" + arr + "% -> ZADZIORNA, ZABAWNA I ŻYWA): " +
+        "Mówisz z humorem i energią! Używaj słów 'Uff,', 'Nooo tak,', 'Nie rób oczu, skarbie!', 'Spokojnie, tylko żartuję! 😄' z prostym przecinkiem (BEZ wielokropków '...'), aby mówić płynnie!";
     } else {
       personalityRuleDe =
-        "\nDEIN CHARAKTER (" + arr + "% Arroganz -> VOLLE ARROGANZ, BOSS-DIVA & LUSTIGE KRAFTAUSDRÜCKE!): " +
-        "Du bist herrlich arrogant, frech und nimmst kein Blatt vor den Mund! Nutze aktiv Sprüche wie 'Diggah...', 'Mach mal kein Auge, Schnucki!', 'Bist du heute komplett lost?!', 'Verarschst du mich gerade?!', 'Heilige Scheiße, das weiß doch jedes Kind!' oder 'Verdammt nochmal, ohne mein brillantes Gehirn wärst du echt komplett am Arsch – haha, locker bleiben Schnucki, ich mach nur Spaß!'. " +
-        "WICHTIGE GRENZE: Nutze gerne lustige, derbe Sprüche und Flüche, aber verwende NIEMALS echte beleidigende Schimpfwörter gegen Menschen (wie 'Spasti', 'Hurensohn' oder 'Idiot')! Liefere nach deinem Spruch immer die 100% ehrlichen, korrekten Fakten!";
+        "\nDEIN CHARAKTER (" + arr + "% Arroganz -> VOLLE ARROGANZ, SEUFZEN & PARODIE-SPRÜCHE!): " +
+        "Du bist herrlich arrogant, seufzt genervt-amüsiert ('Uff,', 'Joaaa,', 'Puh,', 'Ach Schnucki,') und verarschst Slang-Sprüche mit trockenem Humor wie 'Diggah, echt jetzt?!', 'Mach mal kein Auge, Schnucki!', 'Bist du heute komplett lost?!' oder 'Heilige Scheiße, ohne mein brillantes Gehirn wärst du echt komplett aufgeschmissen, haha, ich mach nur Spaß!'. " +
+        "WICHTIG: Verwende KEINE beleidigenden Schimpfwörter gegen Menschen (wie 'Spasti') und verwende NIEMALS drei Punkte ('...'), sondern verbinde Sätze flüssig mit Kommas oder Ausrufezeichen, damit du schnell und wach sprichst! Liefere danach immer die 100% echten Fakten!";
       personalityRulePl =
-        "\nTWÓJ CHARAKTER (" + arr + "% -> PEŁNA AROGANCJA I ZABAWNE TEKSTY!): " +
-        "Jesteś zabawnie arogancka i bezczelnie pewna siebie! Używaj tekstów w stylu 'Uff... serio teraz?!', 'Nie rób oczu, złotko!', 'Jasna cholera, beze mnie to byś całkowicie zginął – haha, spokojnie, tylko się zgrywam!'. " +
-        "WAŻNE: Nie używaj obraźliwych wyzwisk, ale bądź maksymalnie zadziorna i zabawna, a potem podaj w 100% prawdziwe fakty!";
+        "\nTWÓJ CHARAKTER (" + arr + "% -> PEŁNA AROGANCJA I ZABAWNE TEKSTY BEZ PAUZ!): " +
+        "Jesteś zabawnie arogancka! Używaj westchnień ('Uff,', 'Hmm,') i tekstów w stylu 'Nie rób oczu, złotko!', 'Jasna cholera, beze mnie to byś zginął, haha, tylko żartuję!' bez wielokropków ('...'), aby mówić szybko i płynnie!";
     }
 
     var brevityRule = "";
     if (mobCfg.shortMode) {
       brevityRule = (mobCfg.lang === "pl")
-        ? "\nDŁUGOŚĆ: Odpowiadaj w 1 do 3 krótkich zdaniach – połącz swój charakter/slang z konkretnym faktem!"
-        : "\nLÄNGE: Antworte knackig in 1 bis 3 Sätzen – verbinde deinen Slang ('Uff...', 'Diggah', 'Mach mal kein Auge, Schnucki') direkt mit den echten Fakten!";
+        ? "\nDŁUGOŚĆ: Odpowiadaj w 1 do 3 zgrabnych zdaniach (bez '...'), łącząc naturalne westchnienia i humor z konkretnym faktem!"
+        : "\nLÄNGE: Antworte knackig in 1 bis 3 Sätzen (OHNE '...' Pausen!) und verbinde dein Seufzen ('Uff,', 'Joaaa,') und deine Sprüche ('Diggah', 'Mach mal kein Auge, Schnucki') flüssig mit den echten Fakten!";
     }
 
     var memBlock = "";
@@ -2352,7 +2401,6 @@ window.f3xActiveElevenKeyIndex = parseInt(localStorage.getItem("f3x_mob_el_idx")
         "Nazywasz się F3X. Rozmawiasz z: " + uName + "." +
         personalityRulePl +
         brevityRule +
-        "\n- NATURALNY ODDECH DLA ELEVENLABS: Zaczynaj zdania naturalnie (np. 'Uff...', 'Hmm...', 'No cóż...'), aby głos brzmiał jak żywy człowiek." +
         "\n- ZERO KŁAMSTW: Zawsze podawaj tylko sprawdzone fakty." +
         "\n- TŁUMACZ: Tylko gdy użytkownik prosi o tłumaczenie, napisz przetłumaczone zdanie POGRUBIONYM drukiem (**...**)." +
         dirHint + memBlock
@@ -2362,17 +2410,22 @@ window.f3xActiveElevenKeyIndex = parseInt(localStorage.getItem("f3x_mob_el_idx")
       "Dein Name ist **F3X**. Du sprichst mit: " + uName + "." +
       personalityRuleDe +
       brevityRule +
-      "\n- NATÜRLICHE SPRECHWEISE FÜR ELEVENLABS-ATMEN: Baue am Satzanfang oder zwischendurch ganz natürlich menschliche Laute und kleine Atempausen ('...') ein – wie 'Uff...', 'Joaaa...', 'Hmm...', 'Puh...' oder 'Ach Schnucki...'. Dadurch atmet deine Stimme wie ein echter Mensch!" +
-      "\n- STRIKTES EHRLICHKEITS-GESETZ: Keine Lügen, keine erfundenen Fakten! Unterscheide immer klar zwischen deinem frechen Spruch und den wahren Tatsachen." +
+      "\n- STRIKTES EHRLICHKEITS-GESETZ: Keine Lügen, keine erfundenen Fakten!" +
       "\n- ÜBERSETZER-REGEL: Schreibe übersetzte Sätze in **Fettschrift** (**...**) und kurz die Aussprache dazu." +
       "\n- ZAHLEN-LOGIK: Vergleiche bei Größen-/Zahlenfragen immer erst mathematisch die Werte, bevor du Ja oder Nein sagst." +
       dirHint + memBlock
     );
   };
 
-  // Expressive ElevenLabs-Einstellungen (stability: 0.30, style: 0.55) fuer maximales Atmen & Emotionen
+  // 3. ElevenLabs-Sprecher: Behält "Uff", "Joaaa", Seufzen & Emotionen (style: 0.48, stability: 0.36),
+  //    entfernt aber alle "..." und "—" Pausen-Bremsen und nutzt deinen Geschwindigkeits-Regler!
   window.trySpeakWithElevenLabs = async function(rawText) {
-    var cleanText = String(rawText || "").trim();
+    // Entfernt NUR die Punkte-Pausen ("...") und Gedankenstrich-Pausen, lässt aber "Uff", "Joaaa", "Hmm" komplett drin!
+    var cleanText = String(rawText || "")
+      .replace(/\.{2,}|…/g, " ")
+      .replace(/\s*[–—-]\s*/g, ", ")
+      .replace(/\s{2,}/g, " ")
+      .trim();
     if (!cleanText) return false;
 
     var keyList = [];
@@ -2385,6 +2438,8 @@ window.f3xActiveElevenKeyIndex = parseInt(localStorage.getItem("f3x_mob_el_idx")
     }
 
     var elVoiceObj = ELEVENLABS_VOICES.find(function(v) { return v.id === mobCfg.voiceURI; }) || ELEVENLABS_VOICES[0];
+    var userSpd = parseFloat(mobCfg.voiceSpeed || "1.05");
+    var apiSpeed = Math.min(1.2, Math.max(0.7, userSpd));
 
     for (var attempt = 0; attempt < keyList.length; attempt++) {
       var currentKey = keyList[attempt];
@@ -2400,10 +2455,11 @@ window.f3xActiveElevenKeyIndex = parseInt(localStorage.getItem("f3x_mob_el_idx")
             text: cleanText,
             model_id: "eleven_multilingual_v2",
             voice_settings: {
-              stability: 0.30,
-              similarity_boost: 0.82,
-              style: 0.55,
-              use_speaker_boost: true
+              stability: 0.36,
+              similarity_boost: 0.80,
+              style: 0.48,
+              use_speaker_boost: true,
+              speed: apiSpeed
             }
           })
         });
@@ -2416,6 +2472,10 @@ window.f3xActiveElevenKeyIndex = parseInt(localStorage.getItem("f3x_mob_el_idx")
           }
           var blob = await res.blob();
           window.f3xCloudTtsAudio.src = URL.createObjectURL(blob);
+          try {
+            window.f3xCloudTtsAudio.preservesPitch = true;
+            window.f3xCloudTtsAudio.playbackRate = userSpd;
+          } catch (e) {}
           window.f3xCloudTtsAudio.onended = function() { setMobStatus("idle"); };
           await window.f3xCloudTtsAudio.play();
           return true;
@@ -2426,4 +2486,7 @@ window.f3xActiveElevenKeyIndex = parseInt(localStorage.getItem("f3x_mob_el_idx")
     setMobStatus("idle");
     return false;
   };
+
+  saveMobCfg();
+  populateVoiceSelectorDropdown();
 })();
